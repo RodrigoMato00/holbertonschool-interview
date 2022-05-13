@@ -16,7 +16,6 @@ def minOperations(n):
     Minimum Operation
     """
 
-
     if n <= 1:
         return 0
 
