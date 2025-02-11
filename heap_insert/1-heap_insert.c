@@ -57,14 +57,19 @@ heap_t *get_insert_parent(heap_t *root)
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
+    heap_t *new_node, *parent;
+
     if (!root)
         return (NULL);
 
     if (!*root)
-        return (*root = binary_tree_node(NULL, value));
+    {
+        *root = binary_tree_node(NULL, value);
+        return (*root);
+    }
 
-    heap_t *parent = get_insert_parent(*root);
-    heap_t *new_node = binary_tree_node(parent, value);
+    parent = get_insert_parent(*root);
+    new_node = binary_tree_node(parent, value);
 
     if (!new_node)
         return (NULL);
@@ -75,5 +80,6 @@ heap_t *heap_insert(heap_t **root, int value)
         parent->right = new_node;
 
     bubble_up(new_node);
+
     return (new_node);
 }
