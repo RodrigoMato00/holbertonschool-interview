@@ -1,7 +1,7 @@
 #include "binary_trees.h"
 
 /**
- * swap_values - Swaps values between two nodes
+ * swap_values - Swaps the values between two heap nodes
  * @a: First node
  * @b: Second node
  */
@@ -13,22 +13,26 @@ void swap_values(heap_t *a, heap_t *b)
 }
 
 /**
- * bubble_up - Moves the inserted node to its correct position
- * @node: Pointer to the inserted node
+ * bubble_up - Moves the inserted node up to maintain max-heap property
+ * @node: Pointer to the newly inserted node
+ *
+ * Return: The pointer to the node that ends up holding the inserted value
  */
-void bubble_up(heap_t *node)
+heap_t *bubble_up(heap_t *node)
 {
     while (node->parent && node->n > node->parent->n)
     {
         swap_values(node, node->parent);
         node = node->parent;
     }
+    return (node);
 }
 
 /**
  * get_insert_parent - Finds the parent where the new node should be inserted
- * @root: Pointer to the root of the tree
- * Return: Pointer to the parent node
+ *                     using level-order traversal
+ * @root: Pointer to the root of the heap
+ * Return: Pointer to the parent node where there's a free spot (left o right)
  */
 heap_t *get_insert_parent(heap_t *root)
 {
@@ -51,9 +55,11 @@ heap_t *get_insert_parent(heap_t *root)
 
 /**
  * heap_insert - Inserts a value into a Max Binary Heap
- * @root: Double pointer to the root node of the heap
- * @value: The value to insert
- * Return: Pointer to the newly inserted node, or NULL on failure
+ * @root: Double pointer to the root of the Heap
+ * @value: Value to insert
+ *
+ * Return: Pointer to the node that ends up holding the inserted value,
+ *         or NULL on failure
  */
 heap_t *heap_insert(heap_t **root, int value)
 {
@@ -69,8 +75,10 @@ heap_t *heap_insert(heap_t **root, int value)
     }
 
     parent = get_insert_parent(*root);
-    new_node = binary_tree_node(parent, value);
+    if (!parent)
+        return (NULL);
 
+    new_node = binary_tree_node(parent, value);
     if (!new_node)
         return (NULL);
 
@@ -79,7 +87,7 @@ heap_t *heap_insert(heap_t **root, int value)
     else
         parent->right = new_node;
 
-    bubble_up(new_node);
+    new_node = bubble_up(new_node);
 
     return (new_node);
 }
